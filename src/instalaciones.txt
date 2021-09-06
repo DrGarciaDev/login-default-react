@@ -6,3 +6,6 @@ npm install axios
 npm install universal-cookie
 npm install yup https://github.com/jquense/yup
 npm install formik https://formik.org/
+
+Para las gráficas de el dashboard
+npm install recharts https://www.npmjs.com/package/recharts

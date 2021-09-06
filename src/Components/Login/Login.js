@@ -10,10 +10,11 @@ import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, ThemeProvider, createTheme } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import Copyright from './Layouts/Copyrigth';
+import Copyright from '../Copyright';
+import { useHistory } from 'react-router-dom';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: '#00385c',
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -45,6 +46,7 @@ const validationSchema = yup.object({
 
 export default function SignIn() {
   const classes = useStyles();
+  const history = useHistory();
 
   const formik = useFormik({
     initialValues: {
@@ -53,11 +55,29 @@ export default function SignIn() {
     },
     onSubmit: (values) => {
       console.log(JSON.stringify(values));
+      history.push('/dashboard');
     },
     validationSchema: validationSchema
   });
 
+  const theme = createTheme({
+    palette: {
+      type: 'light',
+      // primary: dark ? grey : blueGrey
+      primary: {
+        // light: '#757ce8',
+        main: '#00385c',
+        // dark: '#002884',
+        contrastText: '#fff',
+      },
+      background: {
+        default: '#cbcccc'
+      },
+    }
+  });
+
   return (
+    <ThemeProvider theme={theme}>
     <Container component="main" maxWidth="xs">
       <CssBaseline />
       <div className={classes.paper}>
@@ -65,7 +85,7 @@ export default function SignIn() {
           <LockOutlinedIcon />
         </Avatar>
         <Typography component="h1" variant="h5">
-          Sign in
+          Login
         </Typography>
 
         <form className={classes.form} onSubmit={formik.handleSubmit}>
@@ -75,7 +95,7 @@ export default function SignIn() {
             required
             fullWidth
             id="email"
-            label="Email Address"
+            label="Correo electrónico"
             name="email"
             autoComplete="email"
             autoFocus
@@ -90,7 +110,7 @@ export default function SignIn() {
             required
             fullWidth
             name="password"
-            label="Password"
+            label="Contraseña"
             type="password"
             id="password"
             autoComplete="current-password"
@@ -101,7 +121,7 @@ export default function SignIn() {
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
+            label="Recuérdame"
           />
           <Button
             type="submit"
@@ -111,18 +131,18 @@ export default function SignIn() {
             className={classes.submit}
             
           >
-            Sign In
+            Ingresar
           </Button>
 
           <Grid container>
             <Grid item xs>
               <Link href="#" variant="body2">
-                Forgot password?
+                Olvidaste tu password?
               </Link>
             </Grid>
             <Grid item>
               <Link href="#" variant="body2">
-                {"Don't have an account? Sign Up"}
+                {"No tienes una cuenta? Regístrate"}
               </Link>
             </Grid>
           </Grid>
@@ -132,5 +152,6 @@ export default function SignIn() {
         <Copyright />
       </Box>
     </Container>
+    </ThemeProvider>
   );
 }
