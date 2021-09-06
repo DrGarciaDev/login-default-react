@@ -39,8 +39,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const validationSchema = yup.object({
-  email: yup.string().email().required('Email is required'),
-  password: yup.string().required('Password is required'),
+  email: yup.string().email('Email inválido').required('Email es requerido'),
+  password: yup.string().required('Password es requerido'),
 });
 
 export default function SignIn() {
