@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -14,6 +14,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
 import Copyright from './Layouts/Copyrigth';
+
+import { useFormik } from 'formik';
+import * as yup from 'yup';
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -35,24 +38,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const validationSchema = yup.object({
+  email: yup.string().email().required('Email is required'),
+  password: yup.string().required('Password is required'),
+});
+
 export default function SignIn() {
-  const [body, setBody] = useState({ email: '', password: '' })
   const classes = useStyles();
 
-  const handleChange = (event) => {
-    // console.log(event.target.value)
-    const { name, value } = event.target;
-
-    setBody({
-      ...body,
-      [name]: value
-    })
-  }
-
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    console.log(body);
-  }
+  const formik = useFormik({
+    initialValues: {
+      email: "",
+      password: ""
+    },
+    onSubmit: (values) => {
+      console.log(JSON.stringify(values));
+    },
+    validationSchema: validationSchema
+  });
 
   return (
     <Container component="main" maxWidth="xs">
@@ -65,7 +68,7 @@ export default function SignIn() {
           Sign in
         </Typography>
 
-        <form className={classes.form} >
+        <form className={classes.form} onSubmit={formik.handleSubmit}>
           <TextField
             variant="outlined"
             margin="normal"
@@ -76,8 +79,10 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
-            value={body.email}
-            onChange={handleChange}
+            value={formik.values.email}
+            onChange={formik.handleChange}
+            error={formik.touched.email && Boolean(formik.errors.email)}
+            helperText={formik.touched.email && formik.errors.email}
           />
           <TextField
             variant="outlined"
@@ -89,8 +94,10 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
-            value={body.password}
-            onChange={handleChange}
+            value={formik.values.password}
+            onChange={formik.handleChange}
+            error={formik.touched.password && Boolean(formik.errors.password)}
+            helperText={formik.touched.password && formik.errors.password}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -102,7 +109,7 @@ export default function SignIn() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick={handleSubmit}
+            
           >
             Sign In
           </Button>
